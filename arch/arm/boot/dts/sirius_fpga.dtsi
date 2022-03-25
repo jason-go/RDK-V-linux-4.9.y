@@ -1,0 +1,391 @@
+/*
+ *  Copyright (C) 2012 Altera <www.altera.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "skeleton.dtsi"
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/reset/altr,rst-mgr.h>
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		enable-method = "nationalchip,sirius-smp";
+
+		cpu@0 {
+			compatible = "arm,cortex-a7";
+			clock-frequency = <30000000>;
+			device_type = "cpu";
+			reg = <0>;
+		};
+
+		cpu@1 {
+			compatible = "arm,cortex-a7";
+			clock-frequency = <30000000>;
+			device_type = "cpu";
+			reg = <1>;
+		};
+	};
+
+	intc: intc@a2000000 {
+		compatible = "arm,gic-400";
+		#interrupt-cells = <3>;
+		interrupt-controller;
+		reg = <0xa2001000 0x1000>,
+		      <0xa2002000 0x1000>,
+		      <0xa2004000 0x2000>,
+		      <0xa2006000 0x2000>;
+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+	};
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		device_type = "soc";
+		interrupt-parent = <&intc>;
+		ranges;
+
+		clkmgr@0030A000 {
+			compatible = "nationalchip,clk-mgr";
+			reg = <0x0030A000 0x1000>;
+
+			clocks {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				osc1: osc1 {
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <30000000>;
+				};
+
+				ahb: ahb{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <20000000>;
+				};
+
+				apb2: apb2{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <20000000>;
+				};
+
+				apb2_0: apb2_0{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <20000000>;
+				};
+
+				apb2_1: apb2_1{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <20000000>;
+				};
+
+				apb2_2: apb2_2{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <30000000>;
+				};
+
+				dwmmc: dwmmc{
+					#clock-cells = <0>;
+					compatible = "fixed-clock";
+					clock-frequency = <30000000>;
+				};
+			};
+		};
+
+		timer {
+			compatible = "arm,armv7-timer";
+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+					   <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+					   <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+					   <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+			clock-frequency = <30000000>;
+			interrupt-parent = <&intc>;
+		};
+
+		ocram: sram@ffff0000 {
+			compatible = "mmio-sram";
+			reg = <0xf000 1024>;
+		};
+
+		cpureset: cpureset@83c0000c {
+			compatible = "nationalchip,rst-mgr";
+			reg = <0x83c0000c 0x4>;
+		};
+
+		sdr: sdr@02c00000 {
+			compatible = "nationalchip,sdr-ctl";
+			reg = <0x02c00000 0x1000>;
+		};
+
+		resume: resume@0030a290 {
+			compatible = "nationalchip,resume-reg";
+			reg = <0x0030a290 0x8>;
+		};
+
+		config: config@0230a000 {
+			compatible = "nationalchip,config-reg";
+			reg = <0x0230a000 0x1000>;
+		};
+
+		mmc0: dwmmc@8c000000 {
+			compatible = "snps,dw-mshc";
+			reg = <0x8c000000 0x1000>;
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+			fifo-depth = <0x200>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			num-slots = <1>;
+			broken-cd;
+			bus-width = <4>;
+			cap-mmc-highspeed;
+			cap-sd-highspeed;
+			clocks = <&ahb>, <&dwmmc>;
+			clock-names = "biu", "ciu";
+			status = "okay";
+		};
+
+		dw_spi_gx: nationalchip-dw-spi {
+			compatible = "nationalchip-dw-spi";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x82402000 0x1000>;
+			num-cs = <4>;
+			bus-num = <0>;
+			reg-io-width = <2>;
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+			poll-mode = <1>;
+			clocks = <&apb2_0>;
+			cs-reg = <0x82406000>;
+			status = "okay";
+		};
+
+		uart0: serial0@82804000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x82804000 0x1000>;
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+			reg-shift = <2>;
+			reg-io-width = <4>;
+			clocks = <&apb2_2>;
+		};
+
+		mailbox: mailbox@c0000000 {
+			compatible  = "nationalchip,gx-mailbox";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0xc0000000 0x24>;
+			reg-names = "mailbox_regs";
+			interrupts = <40>;
+			interrupt-names = "mailbox_irq";
+			status = "okay";
+		};
+
+		crypto: crypto@89000000 {
+			compatible  = "nationalchip,gx-crypto";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x89000000 0x608>;
+			reg-names = "crypto_regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "crypto_irq";
+			status = "okay";
+		};
+
+		m2m: m2m@89200000 {
+			compatible  = "nationalchip,gx-m2m";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x89200000 0x2308>;
+			reg-names = "m2m_regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "m2m_irq";
+			status = "okay";
+		};
+
+		key_cfg: key_cfg@89100000 {
+			compatible  = "nationalchip,gx-key_cfg";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x89100000 0x204>;
+			reg-names = "key_cfg.regs";
+			status = "okay";
+		};
+
+		gx_lowpower: gx_lowpower@89700000 {
+			compatible = "nationalchip,gx-lowpower";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x89700000 0x320>;
+			reg-name = "lowpower_reg";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "lowpower_irq";
+			status = "okay";
+		};
+
+		gx_irr: gx_irr@82008000 {
+			compatible  = "nationalchip,gx-irr";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x82008000 0x10>;
+			reg-names = "gx_irr.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gx_irr.irq";
+			clock-frequency = <1000000>;
+			system-clock-frequency = <27000000>;
+			status = "okay";
+		};
+
+		gx_wdt: gx_wdt@8200E000 {
+			compatible  = "nationalchip,gx-wdt";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x8200E000 0x10>;
+			reg-names = "gx_wdt.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gx_wdt.irq";
+			clock-frequency = <1000>;
+			system-clock-frequency = <27000000>;
+			status = "okay";
+		};
+
+		gx_ctr: gx_ctr@8200C000 {
+			compatible  = "nationalchip,gx-ctr";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x8200C000 0x100>;
+			reg-names = "gx_ctr.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
+					<GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+					<GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gx_ctr.irq";
+			clock-frequency = <1000000>;
+			system-clock-frequency = <27000000>;
+			status = "okay";
+		};
+
+		gx_spi: gx_spi@82400000 {
+			compatible  = "nationalchip,gx-spi";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x82400000 0x10>;
+			reg-names = "gx_spi.regs";
+			status = "okay";
+		};
+
+		gx_sci1: gx_sci1@82400000 {
+			compatible  = "nationalchip,gx-sci1";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x82C00000 0x400>;
+			reg-names = "gx_sci1.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gx_sci1.irq";
+			system-clock-frequency = <99000000>;
+			status = "okay";
+		};
+
+		gx_nand: gx_nand@88000000 {
+			compatible  = "nationalchip,gx-nand";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x88000000 0x400>;
+			reg-names = "gx_nand.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "gx_nand.irq";
+			status = "okay";
+		};
+
+		dw_i2c1:dw_i2c1@82004000 {
+			compatible = "snps,designware-i2c";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x82004000 0x1000>;
+			interrupt-parent = <&intc>;
+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&apb2_0>;
+			status = "okay";
+		};
+
+		gx_gpio:gx_gpio@82404000 {
+			compatible = "nationalchip,gx-gpio";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg-num = <3>;
+			reg = <0x82404000 0x1000>,
+			      <0x82405000 0x1000>,
+			      <0x82406000 0x1000>,
+			      <0x80401c00 0x4000>;
+			clocks = <&apb2_1>;
+			output_read_support = <0>;
+			status = "okay";
+		};
+
+		gx_otp:gx_otp@89900000 {
+			compatible = "nationalchip,gx-otp";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x89900000 0x18>;
+			clocks = <&apb2_1>;
+			status = "okay";
+		};
+
+		gx_i2c:gx_i2c@82000000 {
+			compatible = "nationalchip,gx-i2c";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			i2c-count = <3>;
+			reg = <0x82000000 0xC>,
+			      <0x82001000 0xC>,
+			      <0x82002000 0xC>;
+			clock-frequency = <100000>,
+					  <100000>,
+					  <100000>;
+			system-clock-frequency = <27000000>,
+						 <27000000>,
+						 <27000000>;
+			clocks = <&apb2_0>;
+			status = "okay";
+		};
+
+		dvb {
+		};
+
+	};
+};

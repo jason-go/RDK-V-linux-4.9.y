@@ -1,0 +1,231 @@
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+
+/ {
+	model = "NationalChip gx6622";
+	compatible = "csky,gx6622";
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	memory {
+		device_type = "memory";
+		reg = <0x10000000 0x04400000>;
+	};
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "simple-bus";
+		ranges;
+
+		dummy_apb: apb-clock {
+			compatible = "fixed-clock";
+			clock-frequency = <27000000>;
+			clock-output-names = "dummy_apb";
+			#clock-cells = <0>;
+		};
+
+		intc: interrupt-controller {
+			compatible = "csky,gx6605s-intc";
+			reg = <0x00500000 0x400>;
+			interrupt-controller;
+			#interrupt-cells = <1>;
+		};
+
+		timer0 {
+			compatible = "csky,gx6605s-timer";
+			reg = <0x0020a000 0x400>;
+			clocks = <&dummy_apb>;
+			interrupts = <10>;
+			interrupt-parent = <&intc>;
+		};
+
+		gxavdev {
+			compatible = "arm,gxavdev";
+			interrupts = <54>,
+					<61>,
+					<46>,
+					<62>,
+					<43>,
+					<10>,
+					<41>,
+					<40>,
+					<39>,
+					<38>,
+					<37>,
+					<36>,
+					<33>;
+			interrupt-names = "hdmi",
+					"vdec",
+					"vpu",
+					"ga",
+					"pp",
+					"gse",
+					"demux_incident1",
+					"aout_ac3",
+					"aout_spd",
+					"aout_srl",
+					"adec",
+					"jpeg",
+					"demux_incident0";
+			interrupt-parent = <&intc>;
+		};
+
+		nceth0: nationalchip-eth {
+			compatible = "nationalchip-eth";
+			reg = <0x00700000 0x1fff>;
+			interrupts = <56>;
+			interrupt-parent = <&intc>;
+		};
+
+		m25p80: m25p80@0 {
+			compatible = "spansion,m25p80", "jedec,spi-nor";
+			#spi-max-frequency = <48000000>;
+		};
+
+		dw_spi_gx: nationalchip-dw-spi {
+			compatible = "nationalchip-dw-spi";
+			reg = <0x00303000 0x100>;
+			interrupts = <17>;
+			num-cs = <4>;
+			bus-num = <0>;
+			reg-io-width = <2>;
+			interrupt-parent = <&intc>;
+		};
+
+		gx_spi: gx_spi@82400000 {
+			compatible  = "nationalchip,gx-spi";
+			reg = <0x00302000 0x10>;
+			reg-names = "gx_spi.regs";
+			status = "okay";
+		};
+
+		gx_irr: gx_irr@0x00204000 {
+			compatible  = "nationalchip,gx-irr";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x00204000 0x10>;
+			reg-names = "gx_irr.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <4>;
+			interrupt-names = "gx_irr.irq";
+			clock-frequency = <1000000>;
+			system-clock-frequency = <27000000>;
+			status = "okay";
+		};
+
+		gx_otp:gx_otp@F80000 {
+			compatible = "nationalchip,gx-otp";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x00F80000 0x8c>;
+			status = "okay";
+		};
+
+		gx_i2c:gx_i2c@0x00405000 {
+			compatible = "nationalchip,gx-i2c";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			i2c-count = <3>;
+			reg = <0x00205000 0xC>,
+			      <0x00206000 0xC>,
+			      <0x00203000 0xC>;
+			clock-frequency = <100000>,
+					  <100000>,
+					  <100000>;
+			system-clock-frequency = <27000000>,
+						 <27000000>,
+						 <27000000>;
+			status = "okay";
+		};
+
+		gx_gpio:gx_gpio@00305000 {
+			compatible = "nationalchip,gx-gpio";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg-num = <3>;
+			reg = <0x00305000 0x1000>,
+			      <0x00306000 0x1000>,
+			      <0x00307000 0x1000>,
+			      <0x00102000 0x400>;
+			output_read_support = <0>;
+			status = "okay";
+		};
+
+		gx_ctr: gx_ctr@0020A000 {
+			compatible  = "nationalchip,gx-ctr";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x0020A000 0x100>;
+			reg-names = "gx_ctr.regs";
+			interrupt-parent = <&intc>;
+			interrupts = <10 11 12 13>;
+			interrupt-names = "gx_ctr.irq";
+			clock-frequency = <1000000>;
+			system-clock-frequency = <27000000>;
+			status = "okay";
+		};
+
+		dw_dmac: dw_dmac {
+			compatible = "snps,dma-spear1340";
+			reg = <0x800000 0x400>;
+			interrupts = <22 4>;
+			interrupt-parent = <&intc>;
+
+			dma-channels = <8>;
+			#dma-cells = <3>;
+			dma-requests = <32>;
+			chan_allocation_order = <0>;
+			chan_priority = <1>;
+			block_size = <0x3ff>;
+			dma-masters = <2>;
+			data-width = <4 4>;
+			#data_width = <2>;
+		};
+
+		ehci: ehci-hcd {
+			compatible = "generic-ehci";
+			reg = <0x00900000 0x400>;
+			interrupt-parent = <&intc>;
+			interrupts = <59>;
+		};
+
+		ohci0: ohci-hcd0 {
+			compatible = "generic-ohci";
+			reg = <0x00a00000 0x400>;
+			interrupt-parent = <&intc>;
+			interrupts = <58>;
+		};
+
+		ohci1: ohci-hcd1 {
+			compatible = "generic-ohci";
+			reg = <0x00b00000 0x400>;
+			interrupt-parent = <&intc>;
+			interrupts = <57>;
+		};
+
+		uart0: serial@403000 {
+			compatible = "ns16550a";
+			reg = <0x00403000 0x400>;
+			interrupt-parent = <&intc>;
+			interrupts = <15>;
+			clock-frequency = <29491200>;
+			baud = <115200>;
+			reg-shift = <2>;
+			reg-io-width = <1>;
+		};
+	};
+
+	chosen {
+		bootargs = "mem=68M@0x10000000 videomem=60M@0x14400000 mem_end console=ttyS0,115200 init=/init \
+			root=/dev/nfs rw nfsroot=192.168.110.40:/opt/nfs/i386-uclibc,v3 ip=192.168.110.41 synopGMAC=mac_addr@18:ae:14:b2:02:92 \
+			mtdparts=m25p80:128k@0m(BOOT),64k@128k(TABLE),2880k@192k(KERNEL),1792k@3m(ROOTFS),2368k@4864k(USER),960k@7232k(DATA) mtdparts_end";
+
+/*
+		bootargs = "mem=68M videomem=48M fbmem=12M console=ttyS0,115200 init=/init root=/dev/mtdblock3 mtdparts=m25p80:64k@0m(BOOT),64k@64k(TABLE),3M@1M(KERNEL),4M@4M(ROOTFS),8M@8M(DATA)";
+		#bootargs = "mem=68M videomem=48M fbmem=12M console=ttyS0,115200 init=/init root=/dev/nfs rw nfsroot=192.168.110.40:/opt/nfs,v3 ip=192.168.110.41";
+		#bootargs = "console=ttyS0,115200 init=/sbin/init root=/dev/sda2 rw rootwait";
+*/
+	};
+};

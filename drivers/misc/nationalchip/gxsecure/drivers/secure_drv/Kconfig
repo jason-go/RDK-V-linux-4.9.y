@@ -1,0 +1,33 @@
+if (CHIP_SIRIUS || CHIP_TAURUS || CHIP_GEMINI)
+	config GX_FIRMWARE
+		bool "Enable Firmware Module"
+		default y
+
+	if GX_FIRMWARE
+		config GX_FIRMWARE_MBOX
+			bool "Enable Firmware Mailbox Module"
+			default y
+	endif
+
+		menu "Firmware Module Config:"
+			visible if GX_FIRMWARE && GX_FIRMWARE_MBOX
+
+			config MBOX_PROTOCOL_S5H
+				bool "Enable Mailbox Protocol S5H"
+				default y
+
+			config MBOX_PROTOCOL_GENERIC
+				bool "Enable Mailbox Protocol Generic"
+				default y
+
+			config MBOX_PROTOCOL_IFCP
+				bool "Enable Mailbox Protocol IFCP"
+				default y
+
+			config MBOX_SET_DDR_INFO
+				bool "Enable Mailbox Set DDR Info"
+				default n
+		endmenu
+endif
+
+

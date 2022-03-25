@@ -1,0 +1,15 @@
+#
+# Multimedia Video device configuration
+#
+
+menu "Nationalchip Video & Audio decoder"
+
+config NATIONALCHIP_DECODER_CORE
+	tristate "Video & Audio decoder Core"
+	default y
+	depends on GX3201 || GX3211 || SIRIUS || TAURUS || GEMINI
+	select GXSECURE
+	---help---
+	  Say Y here to enable selecting a/v decoder
+endmenu
+

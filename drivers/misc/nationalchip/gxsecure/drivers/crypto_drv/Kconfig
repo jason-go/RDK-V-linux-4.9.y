@@ -1,0 +1,21 @@
+config GX_CRYPTO
+	bool "Enable Crypto Module"
+	default y
+
+if GX_CRYPTO
+	if CHIP_SIRIUS || CHIP_TAURUS || CHIP_GEMINI
+		config GX_CRYPTO_FIFO
+			bool "Enable FIFO Crypto Module"
+			default y
+	endif
+
+	config GX_CRYPTO_DMA
+		bool "Enable DMA Crypto Module"
+		default y
+
+	if CHIP_SIRIUS && GX_CRYPTO_DMA
+		config CRYPTO_DMA_CHANNEL_NUM
+			int "Config the channel count of DMA Crypto Module"
+			default 1
+	endif
+endif

@@ -1,0 +1,42 @@
+objects/crc.o: ../src/crc.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/crc.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/mpe.o: ../src/mpe.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/mpe.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/deplexer.o: ../src/deplexer.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/deplexer.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/ule.o: ../src/ule.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/ule.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/ts.o: ../src/ts.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/ts.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/t2mi.o: ../src/t2mi.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/t2mi.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/parse.o: ../src/parse.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/parse.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/dvbsi.o: ../src/dvbsi.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/dvbsi.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/dict.o: ../src/dict.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/dict.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/probe.o: ../src/probe.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/probe.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/mem.o: ../src/mem.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/mem.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/rb.o: ../src/rb.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/rb.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/list.o: ../src/list.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/list.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^
+objects/chip.o: ../src/chip.c
+	@echo -e "compiling [032m[arm-linux-uclibcgnueabihf-gcc][0m":  ../src/chip.c
+	@arm-linux-uclibcgnueabihf-gcc -O2 -g -ffunction-sections -fdata-sections -DCONFIG_ULE  -I../include -I../src -I../src/chip -c -o $@ $^

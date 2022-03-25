@@ -1,0 +1,19 @@
+config GX_GPIO
+	bool "nationalchip gpio support"
+	default y
+
+choice
+	depends on GX_GPIO
+	prompt "nationalchip gpio version select"
+	default GX_GPIO_V1
+
+config GX_GPIO_V1
+	bool "nationalchip gpio version1"
+
+config GX_GPIO_V2
+	bool "nationalchip gpio version2"
+
+
+endchoice
+
+

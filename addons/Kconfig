@@ -1,0 +1,32 @@
+
+choice
+	prompt "Board Support"
+	default GX3211 if CSKY
+
+config GX3201
+	bool "Nationalchip GX3201/GX6602"
+	help
+	  If the board is of this type, you can select this option.
+
+config GX3211
+	bool "Nationalchip GX3211/GX6622"
+	help
+	  If the board is of this type, you can select this option.
+
+config GX6605S
+	bool "Nationalchip GX6605S"
+	help
+	  If the board is of this type, you can select this option.
+
+config TAURUS
+	bool "Nationalchip TAURUS"
+	help
+	  If the board is of this type, you can select this option.
+
+config GEMINI
+	bool "Nationalchip GEMINI"
+	help
+	  If the board is of this type, you can select this option.
+
+endchoice
+

@@ -1,0 +1,46 @@
+menu "NationalChip Device"
+
+config NATIONALCHIP_COUNTER
+	tristate "nationalchip counter"
+	default n
+	help
+	 Use nationalchip counter to achieve precise time management
+
+config GX_IRR
+	tristate "nationalchip irr support"
+	default y
+
+config GX_SMARTCARD
+	tristate "nationalchip smartcard support"
+	default n
+
+config GX_MTC
+	tristate "nationalchip pvr key support"
+	default n
+
+config GX_OTP
+	tristate "nationalchip otp support"
+	---help---
+	 If you say Y here, you will enable support for NationalChip OTP.
+
+config GXLOWPOWER
+       tristate "nationalchip lowpower driver"
+       default y
+       ---help---
+        lowpower device driver.
+
+config GXSECURE
+       tristate "nationalchip gxsecure"
+       default y
+	   ---help---
+        gxsecure driver.
+
+config GX_GUESTBUS
+       tristate "nationalchip guestbus driver"
+       default y
+       ---help---
+        guestbus driver.
+
+source "drivers/misc/nationalchip/gx_gpio/Kconfig"
+
+endmenu

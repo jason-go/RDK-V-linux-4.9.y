@@ -1,0 +1,21 @@
+config GX_KLM
+	bool "Enable KLM Module"
+	default y
+
+if GX_KLM
+	config GX_KLM_GENERIC
+		bool "Enable Generic KLM Module"
+		default y
+
+	if CHIP_SIRIUS
+		config GX_KLM_IRDETO
+			bool "Enable Irdeto MSR2 KLM Module"
+			default y
+	endif
+
+	if CHIP_SIRIUS || CHIP_TAURUS || CHIP_GEMINI
+		config GX_KLM_SECURE_GENERIC
+			bool "Enable SCPU Generic KLM Module"
+			default y
+	endif
+endif

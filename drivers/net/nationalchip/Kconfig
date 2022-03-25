@@ -1,0 +1,4 @@
+menu "Nationalchip drivers"
+
+source drivers/net/nationalchip/nationalchip_eth/Kconfig
+endmenu

@@ -1,0 +1,7 @@
+config NATIONALCHIP_TIMER_ARM
+	bool
+	depends on ARM && NATIONALCHIP_TIMER
+	select CLKSRC_OF if OF
+	default y
+	help
+	  This option enables support for nationalchip arm clocksource.

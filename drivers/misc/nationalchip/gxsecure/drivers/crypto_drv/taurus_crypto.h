@@ -1,0 +1,41 @@
+#ifndef __TAURUS_CRYPTO_H__
+#define __TAURUS_CRYPTO_H__
+
+#ifdef CPU_SCPU
+#define TAURUS_CRYPTO_KEY_OTP   (0)
+#define TAURUS_CRYPTO_KEY_SOFT  (1)
+
+#define TAURUS_SKLM_DST_SOFT  (0)
+#define TAURUS_SKLM_DST_REG0  (1)
+#define TAURUS_SKLM_DST_REG1  (2)
+#define TAURUS_SKLM_DST_REG2  (3)
+#define TAURUS_SKLM_DST_REG3  (4)
+#define TAURUS_SKLM_DST_REG4  (5)
+#define TAURUS_SKLM_DST_REG5  (6)
+#define TAURUS_SKLM_DST_REG6  (7)
+#define TAURUS_SKLM_DST_REG7  (8)
+#define TAURUS_SKLM_DST_TS    (9)
+#define TAURUS_SKLM_DST_M2M   (10)
+
+#define TAURUS_SKLM_KEY_DSK1  (0)
+#define TAURUS_SKLM_KEY_DSK2  (1)
+#define TAURUS_SKLM_KEY_DSK3  (2)
+#define TAURUS_SKLM_KEY_DSK4  (3)
+#define TAURUS_SKLM_KEY_RK1   (4)
+#define TAURUS_SKLM_KEY_RK2   (5)
+#define TAURUS_SKLM_KEY_KDS   (6)
+#define TAURUS_SKLM_KEY_SMK   (7)
+#define TAURUS_SKLM_KEY_TK1   (8)
+#define TAURUS_SKLM_KEY_TK2   (9)
+#define TAURUS_SKLM_KEY_REG0  (10)
+#define TAURUS_SKLM_KEY_REG1  (11)
+#define TAURUS_SKLM_KEY_REG2  (12)
+#define TAURUS_SKLM_KEY_REG3  (13)
+#define TAURUS_SKLM_KEY_REG4  (14)
+#define TAURUS_SKLM_KEY_REG5  (15)
+#define TAURUS_SKLM_KEY_REG6  (16)
+#define TAURUS_SKLM_KEY_REG7  (17)
+#define TAURUS_SKLM_KEY_SOFT  (18)
+#endif
+
+#endif

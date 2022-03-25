@@ -1,0 +1,31 @@
+config GX_MISC
+	bool "Enable Misc Module"
+	default y
+
+if GX_MISC
+	config GX_MISC_SCI
+		bool "Enable Misc SCI Module"
+		default y
+
+	config GX_MISC_OTP
+		bool "Enable Misc OTP Module"
+		default y
+
+	config GX_MISC_RNG
+		bool "Enable Misc RNG Module"
+		default y
+
+	config GX_MISC_CHIP_CFG
+		bool "Enable Misc Chip config Module"
+		default y
+
+	if (CHIP_SIRIUS)
+		config GX_MISC_HASH
+			bool "Enable Misc Hash Module"
+			default y
+
+		config GX_MISC_SM2
+			bool "Enable Misc SM2 Module"
+			default y
+	endif
+endif
