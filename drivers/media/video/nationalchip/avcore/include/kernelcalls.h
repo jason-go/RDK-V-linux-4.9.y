@@ -11,6 +11,8 @@ extern "C" {
 #error "No defined OS"
 #endif
 
+#include "autoconf.h"
+
 #ifdef LINUX_OS
 #    include <linux/kernel.h>
 #    include <linux/slab.h>

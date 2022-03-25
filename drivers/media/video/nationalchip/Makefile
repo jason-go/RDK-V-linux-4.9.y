@@ -3,8 +3,6 @@ obj-$(CONFIG_NATIONALCHIP_DECODER_CORE) += av.o
 EXTRA_CFLAGS += -DLINUX_OS -DUSE_IMMEDIATE
 EXTRA_CFLAGS += -DGX_DEBUG_PRINTF_LEVEL=2
 
-EXTRA_CFLAGS += -include drivers/media/video/nationalchip/avcore/include/autoconf.h
-
 EXTRA_CFLAGS += -Idrivers/media/video/nationalchip
 EXTRA_CFLAGS += -Idrivers/media/video/nationalchip/avcore
 EXTRA_CFLAGS += -Idrivers/media/video/nationalchip/avcore/include
