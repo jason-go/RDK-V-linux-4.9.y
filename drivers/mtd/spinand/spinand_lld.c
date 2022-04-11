@@ -438,7 +438,22 @@ static int spinand_read_id(struct spi_device *spi_nand, u8 *id)
 			return retval;
 		}
 	}
-	
+	else if(id[0]==0xef && id[1]==0xaa) {
+		cmd.cmd = CMD_READ_ID;
+		cmd.n_dummy = 1;
+		cmd.n_rx = 3;
+		cmd.rx_buf = id;
+		
+		retval = spinand_cmd(spi_nand, &cmd);
+
+		if (retval != 0) {
+			dev_err(&spi_nand->dev, "<0>error %d reading id\n",
+					(int) retval);
+			return retval;
+		}
+
+		printk("id = %02x %02x %02x\n",id[0],id[1],id[2]);
+	}
 	return 0;	
 }
 
@@ -1339,7 +1354,7 @@ static int spinand_get_info(struct spi_device *spi_nand, struct spinand_info *in
 		info->ecc_error = STATUS_ECC_ERROR;		
 	}
 
-	if (id[0] == 0xef && id[1] == 0xaa)
+	if (id[0] == 0xef && id[1] == 0xaa && id[2] == 0x21)
 	{
 		info->mid = id[0];
 		info->did = id[1];
@@ -1374,7 +1389,41 @@ static int spinand_get_info(struct spi_device *spi_nand, struct spinand_info *in
 		info->ecc_mask = STATUS_ECC_MASK;
 		info->ecc_error = STATUS_ECC_ERROR; 		
 	}
+	if (id[0] == 0xef && id[1] == 0xaa && id[2] == 0x23)
+	{
+		info->mid = id[0];
+		info->did = id[1];
+		info->name = "W25N04KV";
+		info->nand_size = (4096 * 64 * 2176);
+		info->usable_size = (4096 * 64 * 2048);
+		info->block_size = (2176*64);
+		info->block_main_size = (2048*64);
+		info->block_num_per_chip = 4096;
+		info->page_size = 2176;
+		info->page_main_size = 2048;
+		info->page_spare_size = 128;
+		info->page_num_per_block = 64;
 
+		info->block_shift = 17;
+		info->block_mask = 0x1ffff;
+
+		info->page_shift = 11;
+		info->page_mask = 0x7ff;
+		
+		info->ecclayout = &spinand_oob_128;
+		info->ecctransfer = &spinand_oob_128;
+
+		info->ecc.mode = NAND_ECC_HW;
+		info->ecc.steps = 4;
+		info->ecc.size = 512;
+		info->ecc.bytes = -1;
+		info->ecc.total = info->ecclayout->eccbytes;
+
+		info->ff_page_mode = 0;
+
+		info->ecc_mask = STATUS_ECC_MASK;
+		info->ecc_error = STATUS_ECC_ERROR;		
+	}
 	if (id[0] == 0xc8 && id[1] == 0x21)
 	{
 		info->mid = id[0];
@@ -2261,7 +2310,7 @@ static int spinand_probe(struct spi_device *spi_nand)
 	struct spinand_chip *chip; 
 	struct spinand_info *info;
 	struct flash_platform_data	*data;
-	u8 id[2]= {0},status = 0;
+	u8 id[3]= {0},status = 0;
 	struct proc_dir_entry *proc_id;
 
 	data = spi_nand->dev.platform_data;
